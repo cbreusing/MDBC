@@ -2,12 +2,12 @@
 #$ -S /bin/sh
 #$ -q sThC.q
 #$ -pe mthread 24
-#$ -l mres=36G,h_data=1.5G,h_vmem=1.5G
+#$ -l mres=96G,h_data=4G,h_vmem=4G
 #$ -cwd
 #$ -j y
 #$ -N ReadFilter
 #$ -o ReadFilter_$TASK_ID.log
-#$ -t 1-378 -tc 10
+#$ -t 1-4 -tc 10
 
 module load bio/fastqc
 module load bio/trimmomatic
@@ -15,7 +15,7 @@ module load bio/samtools
 module load bio/bowtie2
 module load bio/seqtk
 
-FILE=$(sed -n "${SGE_TASK_ID}p" filelist.txt)
+FILE=$(sed -n "${SGE_TASK_ID}p" redo.list)
 
 fastqc -t ${NSLOTS} ${FILE}_R1.fastq.gz
 fastqc -t ${NSLOTS} ${FILE}_R2.fastq.gz
@@ -28,4 +28,5 @@ cut -f1 ${FILE}.cont.unmapped.sam | sort | uniq > ${FILE}.cont.unmapped_ids.lst
 seqtk subseq ${FILE}_R1_paired.fq ${FILE}.cont.unmapped_ids.lst > ${FILE}_R1_clean.fastq
 seqtk subseq ${FILE}_R2_paired.fq ${FILE}.cont.unmapped_ids.lst > ${FILE}_R2_clean.fastq
 
-echo = `date` job $JOB_NAME_$SGE_TASK_ID done
+echo = `date` job $JOB_NAME $SGE_TASK_ID done
+
