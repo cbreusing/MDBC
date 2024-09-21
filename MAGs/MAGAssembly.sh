@@ -7,7 +7,7 @@
 #$ -j y
 #$ -N MAGAssembly
 #$ -o MAGAssembly_$TASK_ID.log
-#$ -t 1-378 -tc 10
+#$ -t 1-1032 -tc 10
 
 module load bio/samtools
 module load bio/bowtie2
@@ -17,9 +17,9 @@ module load bio/ruby
 
 FILE=$(sed -n "${SGE_TASK_ID}p" filelist.txt)
 
-mkdir ${FILE}_MAGs
-cd ${FILE}_MAGs
-ln -s /scratch/nmnh_mdbc/breusingc/pisces/mitogenomes/${FILE}_mitofinder/${FILE}/${FILE}_link_metaspades.scafSeq scaffolds.fasta
+mkdir ${FILE}
+cd ${FILE}
+ln -s /scratch/nmnh_mdbc/breusingc/genohub_9869237/metagenomes/${FILE}_metaspades/scaffolds.fasta scaffolds.fasta
 bowtie2-build scaffolds.fasta scaffolds.fasta
 bowtie2 -p ${NSLOTS} -x scaffolds.fasta -1 ../../${FILE}_R1_clean.fastq -2 ../../${FILE}_R2_clean.fastq | samtools view -bS -h -@ ${NSLOTS} - | samtools sort -@ ${NSLOTS} - > ${FILE}.bowtie2.sorted.bam
 eval "$(conda shell.bash hook)"
