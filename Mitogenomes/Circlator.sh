@@ -32,7 +32,6 @@ repair.sh in1=${FILE}.mt.mappedEnds_1.fq in2=${FILE}.mt.mappedEnds_2.fq out1=${F
 spades.py --only-assembler --careful -t ${NSLOTS} -1 ${FILE}.mt.mappedEnds.fixed.1.fq -2 ${FILE}.mt.mappedEnds.fixed.2.fq -o spades_circular --tmp-dir $SSD_DIR/${FILE}
 circlator merge --min_length_merge 50 --min_length 50 --ref_end 100 --reassemble_end 100 ${FILE}_mtDNA_contig.fasta spades_circular/scaffolds.fasta ${FILE}_mitogenome.merged
 circlator clean ${FILE}_mitogenome.merged.fasta ${FILE}_mitogenome.FINAL
-#circlator fixstart --genes_fa ori_genes.fasta ${FILE}_mitogenome.FINAL.fasta ${FILE}_mitogenome.FINAL.fixed
 
 conda deactivate
 
