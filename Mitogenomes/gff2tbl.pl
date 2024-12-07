@@ -38,7 +38,7 @@ while (my $line = <FILE>) {
     print "$array[4]\t>$array[3]\t$array[2]\n";
     }
     else {
-    print "<$array[3]\t>$array[4]\t$array[2]\n";
+    print "$array[3]\t>$array[4]\t$array[2]\n";
     }
   }
      foreach (@attr) {
