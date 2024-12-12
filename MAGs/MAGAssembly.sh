@@ -11,9 +11,6 @@
 
 module load bio/samtools
 module load bio/bowtie2
-module load bio/hmmer
-module load tools/R
-module load bio/ruby
 
 FILE=$(sed -n "${SGE_TASK_ID}p" filelist.txt)
 
