@@ -23,7 +23,7 @@ mv barcodes/18S/final_seqs/barrnap_spades_consensus/${FILE}.18S.FINAL.oriented.f
 rm barcodes/18S/final_seqs/barrnap_spades_consensus/${FILE}.18S.FINAL.nomatch.fasta
 rm barcodes/18S/final_seqs/barrnap_spades_consensus/${FILE}.18S.FINAL.oriented.fasta
 rm barcodes/18S/final_seqs/barrnap_spades_consensus/${FILE}.18S.FINAL.consensus.fasta
-cat /scratch/nmnh_mdbc/breusingc/genohub_9869237/barcodes/28S/final_seqs/${FILE}.28S.FINAL.region.fasta barrnap/${FILE}/${FILE}.28S.FINAL.fasta | seqkit sort -l -r | awk "/^>/ {n++} n>1 {exit} 1" > barcodes/28S/final_seqs/barrnap_spades_consensus/${FILE}.28S.FINAL.consensus.fasta
+cat barcodes/28S/final_seqs/${FILE}.28S.FINAL.region.fasta barrnap/${FILE}/${FILE}.28S.FINAL.fasta | seqkit sort -l -r | awk "/^>/ {n++} n>1 {exit} 1" > barcodes/28S/final_seqs/barrnap_spades_consensus/${FILE}.28S.FINAL.consensus.fasta
 sed -i "s/>.*/>${FILE}/g" barcodes/28S/final_seqs/barrnap_spades_consensus/${FILE}.28S.FINAL.consensus.fasta
 vsearch --orient barcodes/28S/final_seqs/barrnap_spades_consensus/${FILE}.28S.FINAL.consensus.fasta --db /scratch/nmnh_mdbc/breusingc/databases/SILVA_138.1_LSURef_NR99_tax_silva_trunc.fasta --fastaout barcodes/28S/final_seqs/barrnap_spades_consensus/${FILE}.28S.FINAL.oriented.fasta --notmatched barcodes/28S/final_seqs/barrnap_spades_consensus/${FILE}.28S.FINAL.nomatch.fasta --notrunclabels
 cat barcodes/28S/final_seqs/barrnap_spades_consensus/${FILE}.28S.FINAL.nomatch.fasta >> barcodes/28S/final_seqs/barrnap_spades_consensus/${FILE}.28S.FINAL.oriented.fasta
