@@ -31,15 +31,13 @@ metaspades.py -1 ${FILE}_COI_1.fastq -2 ${FILE}_COI_2.fastq -t ${NSLOTS} -o spad
 mv spades_${FILE}_COI/scaffolds.fasta ${FILE}_COI.fasta
 rm -r spades_${FILE}_COI
 blastn -query ${FILE}_COI.fasta -db /scratch/dbs/blast/bold/bold_blast_2023_05_12 -out blast.${FILE}.COI.txt -evalue 1e-20 -num_threads ${NSLOTS} -max_target_seqs 50 -outfmt 6
-cat blast.${FILE}.COI.txt | sort -k1,1 -k3,3nr -k12,12nr -k11,11n | sort -u -k1,1 > blast.${FILE}.COI.topHit.txt
+sort -k1,1 -k12,12nr -k11,11n -k3,3nr blast.${FILE}.COI.txt | sort -u -k1,1 > blast.${FILE}.COI.topHit.txt
 perl /home/breusingc/scripts/reformat_table.pl blast.${FILE}.COI.topHit.txt /scratch/nmnh_mdbc/breusingc/databases/bold_coi_2023_05_12.txt blast.${FILE}.COI.topHit.full.txt
 mv blast.${FILE}.COI.topHit.full.txt blast.${FILE}.COI.topHit.txt
-rm blast.${FILE}.COI.txt
 blastn -query ${FILE}_COI.fasta -db /scratch/dbs/blast/v5/mito -out blast.${FILE}.mito.txt -evalue 1e-20 -num_threads ${NSLOTS} -max_target_seqs 50 -outfmt "6 std stitle staxids"
-cat blast.${FILE}.mito.txt | sort -k1,1 -k3,3nr -k12,12nr -k11,11n | sort -u -k1,1 > blast.${FILE}.mito.topHit.txt
+sort -k1,1 -k12,12nr -k11,11n -k3,3nr blast.${FILE}.mito.txt | sort -u -k1,1 > blast.${FILE}.mito.topHit.txt
 perl /home/breusingc/scripts/reformat_table2.pl blast.${FILE}.mito.topHit.txt /scratch/nmnh_mdbc/breusingc/databases/taxdump/taxids2lineage.txt blast.${FILE}.mito.topHit.full.txt
 mv blast.${FILE}.mito.topHit.full.txt blast.${FILE}.mito.topHit.txt
-rm blast.${FILE}.mito.txt
 
 #Extract 18S reads
 bbmap.sh build=2 t=${NSLOTS} in=../${FILE}_R1_clean.fastq in2=../${FILE}_R2_clean.fastq ambiguous=best pairedonly=t outm=${FILE}_18S_#.fastq
@@ -50,10 +48,9 @@ metaspades.py -1 ${FILE}_18S_1.fastq -2 ${FILE}_18S_2.fastq -t ${NSLOTS} -o spad
 mv spades_${FILE}_18S/scaffolds.fasta ${FILE}_18S.fasta
 rm -r spades_${FILE}_18S
 blastn -query ${FILE}_18S.fasta -db /scratch/nmnh_mdbc/breusingc/databases/SILVA_138.1_SSURef_NR99 -out blast.${FILE}.18S.txt -evalue 1e-20 -num_threads ${NSLOTS} -max_target_seqs 50 -outfmt "6 std stitle"
-cat blast.${FILE}.18S.txt | sort -k1,1 -k3,3nr -k12,12nr -k11,11n | sort -u -k1,1 > blast.${FILE}.18S.topHit.txt
-rm blast.${FILE}.18S.txt
+sort -k1,1 -k12,12nr -k11,11n -k3,3nr blast.${FILE}.18S.txt | sort -u -k1,1 > blast.${FILE}.18S.topHit.txt
 blastn -query ${FILE}_18S.fasta -db /scratch/dbs/blast/v5/nt -out blast.${FILE}.18Snt.txt -evalue 1e-20 -num_threads ${NSLOTS} -max_target_seqs 50 -outfmt "6 std stitle staxids"
-cat blast.${FILE}.18Snt.txt | sort -k1,1 -k3,3nr -k12,12nr -k11,11n | sort -u -k1,1 > blast.${FILE}.18Snt.topHit.txt
+sort -k1,1 -k12,12nr -k11,11n -k3,3nr blast.${FILE}.18Snt.txt | sort -u -k1,1 > blast.${FILE}.18Snt.topHit.txt
 perl /home/breusingc/scripts/reformat_table2.pl blast.${FILE}.18Snt.topHit.txt /scratch/nmnh_mdbc/breusingc/databases/taxdump/taxids2lineage.txt blast.${FILE}.18Snt.topHit.full.txt
 mv blast.${FILE}.18Snt.topHit.full.txt blast.${FILE}.18Snt.topHit.txt
 
@@ -66,11 +63,8 @@ metaspades.py -1 ${FILE}_28S_1.fastq -2 ${FILE}_28S_2.fastq -t ${NSLOTS} -o spad
 mv spades_${FILE}_28S/scaffolds.fasta ${FILE}_28S.fasta
 rm -r spades_${FILE}_28S
 blastn -query ${FILE}_28S.fasta -db /scratch/nmnh_mdbc/breusingc/databases/SILVA_138.1_LSURef_NR99 -out blast.${FILE}.28S.txt -evalue 1e-20 -num_threads ${NSLOTS} -max_target_seqs 50 -outfmt "6 std stitle"
-cat blast.${FILE}.28S.txt | sort -k1,1 -k3,3nr -k12,12nr -k11,11n | sort -u -k1,1 > blast.${FILE}.28S.topHit.txt
-rm blast.${FILE}.28S.txt
+sort -k1,1 -k12,12nr -k11,11n -k3,3nr blast.${FILE}.28S.txt | sort -u -k1,1 > blast.${FILE}.28S.topHit.txt
 blastn -query ${FILE}_28S.fasta -db /scratch/dbs/blast/v5/nt -out blast.${FILE}.28Snt.txt -evalue 1e-20 -num_threads ${NSLOTS} -max_target_seqs 50 -outfmt "6 std stitle staxids"
-cat blast.${FILE}.28Snt.txt | sort -k3,3nr -k1,1 -k12,12nr -k11,11n | sort -u -k1,1 > blast.${FILE}.28Snt.topHit.txt
+sort -k1,1 -k12,12nr -k11,11n -k3,3nr blast.${FILE}.28Snt.txt | sort -u -k1,1 > blast.${FILE}.28Snt.topHit.txt
 perl /home/breusingc/scripts/reformat_table2.pl blast.${FILE}.28Snt.topHit.txt /scratch/nmnh_mdbc/breusingc/databases/taxdump/taxids2lineage.txt blast.${FILE}.28Snt.topHit.full.txt
 mv blast.${FILE}.28Snt.topHit.full.txt blast.${FILE}.28Snt.topHit.txt
-
-echo = `date` job $JOB_NAME $SGE_TASK_ID done
