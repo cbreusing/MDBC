@@ -10,6 +10,7 @@
 
 module load bio/bedtools
 module load bio/seqkit
+module load bio/seqtk
 
 eval "$(conda shell.bash hook)"
 conda activate vsearch
@@ -17,15 +18,14 @@ conda activate vsearch
 FILE=$(sed -n "${SGE_TASK_ID}p" filelist.txt | perl -anle 'print $F[0]')
 TAXON=$(sed -n "${SGE_TASK_ID}p" filelist.txt | perl -anle 'print $F[1]')
 
-cat blast.${FILE}.mito.topHit.txt blast.${FILE}.COI.topHit.txt | grep "${TAXON}" | perl -anle 'print $F[0] . "\t" . $F[6] . "\t" . $F[7]' | sort -u > ${FILE}.COI.bed
-bedtools getfasta -fi ${FILE}_COI.fasta -bed ${FILE}.COI.bed -fullHeader | seqkit sort -l -r > COI/${FILE}.COI.${TAXON}.fasta
-awk "/^>/ {n++} n>1 {exit} 1" COI/${FILE}.COI.${TAXON}.fasta > COI/final_seqs/${FILE}.COI.FINAL.region.fasta
-vsearch --orient COI/final_seqs/${FILE}.COI.FINAL.region.fasta --db /scratch/dbs/blast/bold/fasta/bold_coi_2023_05_12.fasta --fastaout COI/final_seqs/${FILE}.COI.FINAL.oriented.fasta --notmatched COI/final_seqs/${FILE}.COI.FINAL.nomatch.fasta --notrunclabels
+cat blast.${FILE}.mito.topHit.txt blast.${FILE}.COI.topHit.txt | grep "${TAXON}" | perl -anle 'print $F[0]' | sort -u > ${FILE}.COI.ids
+seqtk subseq ${FILE}_COI.fasta ${FILE}.COI.ids | seqkit sort -l -r > COI/${FILE}.COI.${TAXON}.fasta
+awk "/^>/ {n++} n>1 {exit} 1" COI/${FILE}.COI.${TAXON}.fasta > COI/final_seqs/${FILE}.COI.FINAL.fasta
+vsearch --orient COI/final_seqs/${FILE}.COI.FINAL.fasta --db /scratch/dbs/blast/bold/fasta/bold_coi_2023_05_12.fasta --fastaout COI/final_seqs/${FILE}.COI.FINAL.oriented.fasta --notmatched COI/final_seqs/${FILE}.COI.FINAL.nomatch.fasta --notrunclabels
 cat COI/final_seqs/${FILE}.COI.FINAL.nomatch.fasta >> COI/final_seqs/${FILE}.COI.FINAL.oriented.fasta
 mv COI/final_seqs/${FILE}.COI.FINAL.oriented.fasta COI/final_seqs/${FILE}.COI.FINAL.fasta
 rm COI/final_seqs/${FILE}.COI.FINAL.nomatch.fasta
 rm COI/final_seqs/${FILE}.COI.FINAL.oriented.fasta
-rm COI/final_seqs/${FILE}.COI.FINAL.region.fasta
 sed -i "s/>.*/>${FILE}/g" COI/final_seqs/${FILE}.COI.FINAL.fasta
 
 cat blast.${FILE}.18S.topHit.txt blast.${FILE}.18Snt.topHit.txt | grep "${TAXON}" | perl -anle 'print $F[0] . "\t" . $F[6] . "\t" . $F[7]' | sort -u > ${FILE}.18S.bed
