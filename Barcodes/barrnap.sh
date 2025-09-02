@@ -26,20 +26,20 @@ conda deactivate
 
 awk 'BEGIN {RS=">"} /28S_rRNA/ {printf "%s", ">"$0}' ${file}_18S-28S_rRNA.fasta > ${file}_28S_rRNA.fasta
 awk 'BEGIN {RS=">"} /18S_rRNA/ {printf "%s", ">"$0}' ${file}_18S-28S_rRNA.fasta > ${file}_18S_rRNA.fasta
-blastn -query ${file}_28S_rRNA.fasta -db /scratch/dbs/blast/v5/nt -out blast.${file}.28Snt.txt -evalue 1e-10 -num_threads ${NSLOTS} -max_target_seqs 1 -outfmt "6 std stitle staxids"
+blastn -query ${file}_28S_rRNA.fasta -db /scratch/dbs/blast/v5/nt -out blast.${file}.28Snt.txt -evalue 1e-10 -num_threads ${NSLOTS} -max_target_seqs 50 -outfmt "6 std stitle staxids"
 cat blast.${file}.28Snt.txt | sort -k1,1 -k12,12nr -k11,11n | sort -u -k1,1 > blast.${file}.28Snt.topHit.txt
 perl /home/breusingc/scripts/reformat_table2.pl blast.${file}.28Snt.topHit.txt /scratch/nmnh_mdbc/breusingc/databases/taxdump/taxids2lineage.txt blast.${file}.28Snt.topHit.full.txt
 grep "28S ribosomal" blast.${file}.28Snt.topHit.full.txt > blast.${file}.28Snt.topHit.txt
 grep "large subunit ribosomal" blast.${file}.28Snt.topHit.full.txt | grep -v "mitochondr" >> blast.${file}.28Snt.topHit.txt
-blastn -query ${file}_28S_rRNA.fasta -db /scratch/nmnh_mdbc/breusingc/databases/SILVA_138.1_LSURef_NR99 -out blast.${file}.28S.txt -evalue 1e-10 -max_target_seqs 1 -outfmt "6 std stitle"
+blastn -query ${file}_28S_rRNA.fasta -db /scratch/nmnh_mdbc/breusingc/databases/SILVA_138.1_LSURef_NR99 -out blast.${file}.28S.txt -evalue 1e-10 -max_target_seqs 50 -outfmt "6 std stitle"
 cat blast.${file}.28S.txt | sort -k1,1 -k12,12nr -k11,11n | sort -u -k1,1 > blast.${file}.28S.topHit.txt
 rm blast.${file}.28S.txt
-blastn -query ${file}_18S_rRNA.fasta -db /scratch/dbs/blast/v5/nt -out blast.${file}.18Snt.txt -evalue 1e-10 -num_threads ${NSLOTS} -max_target_seqs 1 -outfmt "6 std stitle staxids"
+blastn -query ${file}_18S_rRNA.fasta -db /scratch/dbs/blast/v5/nt -out blast.${file}.18Snt.txt -evalue 1e-10 -num_threads ${NSLOTS} -max_target_seqs 50 -outfmt "6 std stitle staxids"
 cat blast.${file}.18Snt.txt | sort -k1,1 -k12,12nr -k11,11n | sort -u -k1,1 > blast.${file}.18Snt.topHit.txt
 perl /home/breusingc/scripts/reformat_table2.pl blast.${file}.18Snt.topHit.txt /scratch/nmnh_mdbc/breusingc/databases/taxdump/taxids2lineage.txt blast.${file}.18Snt.topHit.full.txt
 grep "18S ribosomal" blast.${file}.18Snt.topHit.full.txt > blast.${file}.18Snt.topHit.txt
 grep "small subunit ribosomal" blast.${file}.18Snt.topHit.full.txt | grep -v "mitochondr" >> blast.${file}.18Snt.topHit.txt
-blastn -query ${file}_18S_rRNA.fasta -db /scratch/nmnh_mdbc/breusingc/databases/SILVA_138.1_SSURef_NR99 -out blast.${file}.18S.txt -evalue 1e-10 -max_target_seqs 1 -outfmt "6 std stitle"
+blastn -query ${file}_18S_rRNA.fasta -db /scratch/nmnh_mdbc/breusingc/databases/SILVA_138.1_SSURef_NR99 -out blast.${file}.18S.txt -evalue 1e-10 -max_target_seqs 50 -outfmt "6 std stitle"
 cat blast.${file}.18S.txt | sort -k1,1 -k12,12nr -k11,11n | sort -u -k1,1 > blast.${file}.18S.topHit.txt
 rm blast.${file}.18S.txt
 cat blast.${file}.18S.topHit.txt blast.${file}.18Snt.topHit.txt | grep "${taxon}" | perl -anle 'print $F[0]' | sort -u > ${file}.18S.ids
